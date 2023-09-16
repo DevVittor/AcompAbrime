@@ -1,0 +1,72 @@
+header{
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background: #0D1116;
+}
+.container-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+}
+.box-logo a{
+    color: #fff;
+    font-weight: 500;
+    font-size: 1.2rem;
+}
+.button-entrar{
+    background: #fff;
+    color: #000;
+    font-weight: 500;
+    font-size: 18px;
+    border-radius: 5px;
+    padding: 8px 20px;
+    border: 1px solid transparent;
+    outline: none;
+}
+.button-entrar:hover{
+    cursor: pointer;
+}
+.button-gratuita{
+    background: #F43E36;
+    color: #fff;
+    font-weight: 600;
+    font-size: 18px;
+    border-radius: 5px;
+    padding: 8px 20px;
+    border: 1px solid transparent;
+    outline: none;
+}
+.button-gratuita:hover{
+    cursor: pointer;
+}
+.button-menu{
+    background: #0D1116;
+    color: #fff;
+    border: 1px solid #ddd;
+    font-weight: 600;
+    font-size: 18px;
+    border-radius: 5px;
+    padding: 8px 20px;
+    outline: none;
+}
+.button-menu:hover{
+    background: #fff;
+    color: #0D1116;
+    cursor: pointer;
+}
+@media screen and (max-width: 640px){
+    .container-header{
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+        padding: 20px 10px;
+    }
+    .box-menu{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+    }
+}
