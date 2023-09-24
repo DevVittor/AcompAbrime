@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const conn = require('../database/conn');
 
-const Social = conn.define('Social',{
+const Social = conn.define('Socials',{
     Facebook:{
         type:Sequelize.STRING,
         allowNull:true
@@ -31,5 +31,5 @@ const Social = conn.define('Social',{
         allowNull:true
     },
 })
-Social.sync()
-module.exports=Social
+Social.sync();
+module.exports=Social;

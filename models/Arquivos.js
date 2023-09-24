@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const conn = require('../database/conn');
 
-const Arquivo = conn.define('Arquivo',{
+const Arquivo = conn.define('Arquivos',{
     Fotos:{
         type:Sequelize.TEXT,
         allowNull:false
@@ -12,4 +12,4 @@ const Arquivo = conn.define('Arquivo',{
     },
 })
 Arquivo.sync()
-module.exports = Arquivo
+module.exports = Arquivo;

@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const conn  = require('../database/conn');
 
-const Login = conn.define('login',{
+const Login = conn.define('Logins',{
     email:{
         type:Sequelize.STRING,
         unique:true,
@@ -12,7 +12,23 @@ const Login = conn.define('login',{
         type: Sequelize.STRING,
         required:true,
         allowNull:false
-    }
-})
+    },
+    cliente:{
+        type:Sequelize.BOOLEAN,
+        allowNull:false
+    },
+    acompanhante:{
+        type:Sequelize.BOOLEAN,
+        allowNull:false
+    },
+    empresa:{
+        type:Sequelize.BOOLEAN,
+        allowNull:false
+    },
+    admin:{
+        type:Sequelize.BOOLEAN,
+        allowNull:false
+    },
+});
 Login.sync();
 module.exports = Login;

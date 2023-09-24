@@ -55,7 +55,6 @@ const Acomp = conn.define('Acompanhantes',{
         type:Sequelize.STRING,
         allowNull:false
     }
-
-})
-Acomp.sync()
-module.exports=Acomp
+});
+Acomp.sync();
+module.exports= Acomp;

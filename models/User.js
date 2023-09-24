@@ -1,9 +1,12 @@
 const Sequelize = require('sequelize');
 const conn = require('../database/conn');
-const Usuario = conn.define('Usuario',{
+const Acomp = require('../models/Acomp');
+
+const Usuario = conn.define('Usuarios',{
     nome:{
         type:Sequelize.STRING,
-        allowNull:false
+        allowNull:false,
+        require:true
     },
     email:{
         type:Sequelize.STRING,
@@ -17,6 +20,12 @@ const Usuario = conn.define('Usuario',{
         type:Sequelize.STRING,
         allowNull:false
     }
-})
-Usuario.sync()
-module.exports = Usuario
+});
+
+Usuario.belongsTo(Acomp,{
+    constraint:true,
+    foreignKey:'idAcomp'
+});
+
+Usuario.sync({force:true});
+module.exports = Usuario;

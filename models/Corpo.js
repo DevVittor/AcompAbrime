@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const conn = require('../database/conn');
 
-const Corpo = conn.define('Corpo',{
+const Corpo = conn.define('Corpos',{
     Altura:{
         type:Sequelize.FLOAT(3,2),
         allowNull:false
