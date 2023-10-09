@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+const jwtSecret = process.env.JWT_SECRET;
+
 //Controllers
 const UserController = require("../controller/UserController");
 const userController = new UserController();
@@ -20,14 +22,40 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
-app.get("/", userController.index);
+function authRouter(req, res, next) {
+    const authToken = req.headers["authorization"];
+    if (authToken != undefined) {
+        const BearerToken = authToken.split(" ");
+        const token = BearerToken[1];
+        console.log("Token extraído:", token);
+        jwt.verify(token, jwtSecret, (error, data) => {
+            if (error) {
+                res.status(401).json({
+                    infoError: `Token está Inválido! devido ao error: ${error}`,
+                });
+            } else {
+                req.token = token;
+                req.userLogger = { id: data.id, email: data.email };
+                //res.status(200).json({ infoData: data });
+                next();
+            }
+        });
+    } else {
+        res.status(401).json({ error: "Token Inválido" });
+    }
+}
+app.get('/', (req,res)=>{
+    const token = req.token;
+    res.json({name:"Vittor",token:token});
+})
+//app.get("/", userController.index);
 app.get("/userstore", userController.store);
 
 app.get("/verificar", (req, res) => {
     res.send("verificar");
 });
 
-app.get("/cadastrar", (req, res) => {
+app.get("/cadastrar", authRouter,(req, res) => {
     res.send("Register");
 });
 
@@ -39,7 +67,6 @@ app.post("/cadastrar/salvar", async (req, res) => {
             email: email,
         },
     });
-
     if (emailExist) {
         console.log(`O email ${email} já existe`);
         res.redirect("/cadastrar");
@@ -79,9 +106,24 @@ app.post("/acessar/ok", async (req, res) => {
     if (dataUsuario) {
         const hash = dataUsuario.senha;
         const checkSenha = bcrypt.compareSync(senha, hash);
-        checkSenha
-            ? console.log("Login Bem feito")
-            : console.log("Dados incorretos");
+        if (checkSenha) {
+            jwt.sign(
+                { id: dataUsuario.id, email: dataUsuario.email },
+                jwtSecret,
+                { expiresIn: "48h" },
+                (error, token) => {
+                    if (error) {
+                        res.status(400).json({ error: "Falha Interna" });
+                    } else {
+                        res.status(200).json({ token: token });
+                    }
+                },
+            );
+            console.log("Login Bem feito")
+        }else{
+            console.log('Login inválido');
+            res.status(301).redirect('/cadastrar');
+        }
     }
 });
 
