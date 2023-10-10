@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
 function authRouter(req, res, next) {
-    const authToken = req.headers.authorization;
+    const authToken = req.headers['authorization'];
     console.log(authToken);
     if (authToken != undefined) {
         const BearerToken = authToken.split(" ");
@@ -40,10 +40,13 @@ function authRouter(req, res, next) {
         res.status(401).json({ error: "Token Inválido" });
     }
 }
-
 app.get('/',authRouter,(req,res)=>{
-    res.send('Acesso permitido!');
+    res.send('Olá');
 });
+
+/*app.get('/',authRouter,(req,res)=>{
+    res.send('Olá');
+});*/
 
 //app.get("/", userController.index);
 app.get("/userstore", userController.store);
@@ -138,8 +141,7 @@ app.post("/acessar/ok", async (req, res) => {
                     if (error) {
                         res.status(400).json({ error: "Falha Interna" });
                     } else {
-                        //localStorage.setItem("Token", token);
-                        //req.tokenCode = token;
+                        req.tokenCode = token;
                         res.status(200).json({ token: token });
                         console.log(token);
                     }
