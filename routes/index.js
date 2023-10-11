@@ -40,15 +40,10 @@ function authRouter(req, res, next) {
         res.status(401).json({ error: "Token Inválido" });
     }
 }
-app.get('/',authRouter,(req,res)=>{
-    res.send('Olá');
-});
-
 /*app.get('/',authRouter,(req,res)=>{
     res.send('Olá');
 });*/
-
-//app.get("/", userController.index);
+app.get("/",authRouter, userController.index);
 app.get("/userstore", userController.store);
 
 app.get("/cadastrar", authRouter,(req, res) => {
