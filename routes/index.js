@@ -152,9 +152,9 @@ app.post("/acessar/ok", async (req, res) => {
     }
 });
 
-app.get("*", (req, res) => {
-    res.status(404).send("Página Vázia!");
-});
+/*app.get("*", (req, res) => {
+    res.status(404);
+});*/
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
