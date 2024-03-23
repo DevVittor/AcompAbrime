@@ -6,6 +6,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const multer = require("multer");
+const path = require("path");
 
 const jwtSecret = process.env.JWT_SECRET;
 
@@ -14,11 +16,28 @@ const UserController = require("../controller/UserController");
 const userController = new UserController();
 //Models
 const Usuario = require("../models/Usuario");
-
-app.use(express.static("/public"));
+// Rota para servir imagens
+// Rota para servir imagens
+app.use("/uploads", express.static("uploads"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173/", // Substitua pela URL da sua aplicação Vue.js
+}));
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "uploads/");
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        cb(null, Date.now() + ext);
+    },
+});
+
+const upload = multer({ storage });
+
+
 
 function authRouter(req, res, next) {
     const authToken = req.headers['authorization'];
@@ -29,10 +48,10 @@ function authRouter(req, res, next) {
         console.log("Token extraído:", token);
         jwt.verify(token, jwtSecret, (error, data) => {
             if (error) {
-                res.status(401).json({ infoError: `Token está Inválido! devido ao error: ${error}`});
+                res.status(401).json({ infoError: `Token está Inválido! devido ao error: ${error}` });
             } else {
                 req.token = token;
-                req.userLogger = { id: data.id, email: data.email };
+                req.userLogger = { id: data.id};
                 next();
             }
         });
@@ -43,10 +62,10 @@ function authRouter(req, res, next) {
 /*app.get('/',authRouter,(req,res)=>{
     res.send('Olá');
 });*/
-app.get("/",authRouter, userController.index);
+app.get("/", authRouter, userController.index);
 app.get("/userstore", userController.store);
 
-app.get("/cadastrar", authRouter,(req, res) => {
+app.get("/cadastrar", authRouter, (req, res) => {
     res.send("Register");
 });
 
@@ -118,7 +137,7 @@ app.get("/acessar", (req, res) => {
 });*/
 
 app.post("/acessar/ok", async (req, res) => {
-    const { email, senha} = req.body;
+    const { email, senha } = req.body;
     const dataUsuario = await Usuario.findOne({ where: { email } });
 
     if (dataUsuario && senha) {
@@ -152,11 +171,21 @@ app.post("/acessar/ok", async (req, res) => {
     }
 });
 
-/*app.get("*", (req, res) => {
+app.get("*", (req, res) => {
     res.status(404);
-});*/
+});
 
-const port = process.env.PORT || 8080;
+
+
+// Rota para lidar com o upload de imagens
+app.post("/upload", upload.single("image"), (req, res) => {
+    // Salve a imagem no diretório público do servidor Node.js
+    const imageUrl = `public/uploads/${req.file.filename}`;
+    res.json({ imageUrl });
+});
+
+
+const port = process.env.PORT || 5173;
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);
 });
